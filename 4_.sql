@@ -1,8 +1,12 @@
-CREATE TABLE character (
-	id SERIAL PRIMARY KEY,
-	name VARCHAR(50) NOT NULL,
-	description TEXT,
-	role VARCHAR(50) CHECK (role IN ('leading', 'susupporting', 'background')),
-	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+SELECT
+    p.id AS ID,
+    CONCAT(p.first_name, ' ', p.last_name) AS "Name",
+    COALESCE(AVG(m.budget), 0) AS "Average budget"
+FROM
+    movie m
+JOIN
+    person p ON p.id = (m.director->>'id')::INT
+GROUP BY
+    p.id, p.first_name, p.last_name
+ORDER BY
+    p.id;
