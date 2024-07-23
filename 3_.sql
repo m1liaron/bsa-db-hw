@@ -9,6 +9,7 @@ CREATE TABLE movie (
 	director_name VARCHAR(255),
 	country VARCHAR(100),
 	poster_url TEXT,
+	characters JSONB,
 	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
