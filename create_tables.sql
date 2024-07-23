@@ -25,12 +25,12 @@ CREATE TABLE movie (
 	description TEXT,
 	budget NUMERIC,
 	release_date DATE,
-	duration INTERVAL,
-	genres TEXT[],
-	director_name VARCHAR(255),
 	country VARCHAR(100),
-	poster_url TEXT,
-	characters JSONB,
+	duration INTERVAL,
+	poster JSONB,
+	director JSONB,
+	actors JSONB,
+	genres JSONB,
 	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
