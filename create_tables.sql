@@ -4,7 +4,7 @@ CREATE TABLE "user" (
     first_name VARCHAR(50),
     last_name VARCHAR(50),
     email VARCHAR(100),
-    password VARCHAR(100)
+    password VARCHAR(100),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -35,15 +35,6 @@ CREATE TABLE movie (
 	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE character (
-	id SERIAL PRIMARY KEY,
-	name VARCHAR(50) NOT NULL,
-	description TEXT,
-	role VARCHAR(50) CHECK (role IN ('leading', 'susupporting', 'background')),
-	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
 CREATE TABLE person (
 	id SERIAL PRIMARY KEY,
 	first_name VARCHAR(50),
@@ -56,6 +47,17 @@ CREATE TABLE person (
 	avatar_image TEXT,
 	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE character (
+	id SERIAL PRIMARY KEY,
+	name VARCHAR(50) NOT NULL,
+	person_id INT,
+	description TEXT,
+	role VARCHAR(50) CHECK (role IN ('leading', 'supporting', 'background')),
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	FOREIGN KEY (person_id) REFERENCES person(id)
 );
 
 CREATE TABLE favorite_movies (
