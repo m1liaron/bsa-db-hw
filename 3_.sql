@@ -1,15 +1,12 @@
-CREATE TABLE movie (
-	id SERIAL PRIMARY KEY,
-	title VARCHAR(100),
-	description TEXT,
-	budget NUMERIC,
-	release_date DATE,
-	duration INTERVAL,
-	genres TEXT[],
-	director_name VARCHAR(255),
-	country VARCHAR(100),
-	poster_url TEXT,
-	characters JSONB,
-	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+SELECT
+    u.id AS ID,
+    u.username AS "Username",
+    ARRAY_AGG(f.movie_id) AS "Favorite movie IDs"
+FROM
+    "user" u
+LEFT JOIN
+    favorite_movies f ON u.id = f.user_id
+GROUP BY
+    u.id, u.username
+ORDER BY
+    u.id;
