@@ -30,7 +30,7 @@ CREATE TABLE movie (
 	description TEXT,
 	budget NUMERIC,
 	release_date DATE,
-	country VARCHAR(100),
+	country JSONB,
 	duration INTERVAL,
 	poster JSONB,
 	director JSONB,
