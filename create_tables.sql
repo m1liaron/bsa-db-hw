@@ -83,3 +83,8 @@ CREATE TABLE genres (
 	id SERIAL PRIMARY KEY,
 	name TEXT
 );
+
+CREATE TABLE country (
+	id SERIAL PRIMARY KEY,
+	name TEXT
+)
