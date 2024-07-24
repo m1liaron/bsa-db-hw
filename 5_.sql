@@ -1,13 +1,19 @@
-CREATE TABLE person (
-	id SERIAL PRIMARY KEY,
-	first_name VARCHAR(50),
-	last_name VARCHAR(50),
-	biography TEXT,
-	date_of_birth DATE,
-	gender VARCHAR(50) CHECK (gender IN ('male', 'female', 'man', 'woman')),
-	country VARCHAR(50),
-	images TEXT[],
-	avatar_image TEXT,
-	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+SELECT 
+	m.id AS ID
+	m.title as 'Title'
+	m.realease_date as 'Release date'
+	m.duration as 'Duration'
+	m.description as 'Description'
+	m.poster as 'Poster'
+	m.director as 'Director'
+FROM 
+	moivie m
+WHERE
+	m.country = 'USA'
+	AND m.realease_date >= '2022-01-01'
+	AND EXTRACT(EPOCH FROM m.duration) > EXTRACT(EPOCH FROM INTERVAL '2 hours 15 minutes'])
+	ADD EXISTS(
+		SELECT 1
+		FROM jsonb_array_elements(m.genres) AS gengre
+		WHERE genre->>'name' IN ('Action', 'Drama')
+	)
