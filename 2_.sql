@@ -1,13 +1,10 @@
 SELECT
     m.id AS ID,
     m.title AS "Title",
-    COUNT(DISTINCT c.id) AS "Actors count"
+    COUNT(actor_data->>'id') AS "Actors count"
 FROM
-    movie m
-JOIN
-    LATERAL jsonb_array_elements(m.characters) AS character ON TRUE
-JOIN
-    character c ON (character->>'id')::INT  = c.id
+    movie m,
+	JSONB_ARRAY_ELEMENTS(m.actors) AS actor_data
 WHERE 
 	m.release_date >= CURRENT_DATE - INTERVAL '5 years	'
 GROUP BY
