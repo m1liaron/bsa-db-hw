@@ -9,9 +9,9 @@ SELECT
 FROM
 	movie m
 WHERE
-	m.country = 'USA'
+	(m.country->>'id')::INT = 1
 	AND m.release_date >= '2022-01-01'
-	 AND EXTRACT(EPOCH FROM m.duration) > EXTRACT(EPOCH FROM INTERVAL '2 hours 15 minutes')
+	 -- AND EXTRACT(EPOCH FROM m.duration) > EXTRACT(EPOCH FROM INTERVAL '2 hours 15 minutes')
     AND EXISTS (
         SELECT 1
         FROM jsonb_array_elements(m.genres) AS genre

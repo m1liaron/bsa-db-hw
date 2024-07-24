@@ -30,7 +30,7 @@ CREATE TABLE movie (
 	description TEXT,
 	budget NUMERIC,
 	release_date DATE,
-	country VARCHAR(100),
+	country JSONB,
 	duration INTERVAL,
 	poster JSONB,
 	director JSONB,
@@ -38,18 +38,6 @@ CREATE TABLE movie (
 	genres JSONB,
 	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Character table
-CREATE TABLE character (
-	id SERIAL PRIMARY KEY,
-	name VARCHAR(50) NOT NULL,
-	description TEXT,
-	role VARCHAR(50) CHECK (role IN ('leading', 'susupporting', 'background')),
-	person_id INT,
-	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	FOREIGN KEY (person_id) REFERENCES person(id)
 );
 
 -- Person table
@@ -67,6 +55,18 @@ CREATE TABLE person (
 	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Character table
+CREATE TABLE character (
+	id SERIAL PRIMARY KEY,
+	name VARCHAR(50) NOT NULL,
+	description TEXT,
+	role VARCHAR(50) CHECK (role IN ('leading', 'supporting', 'background')),
+	person_id INT,
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	FOREIGN KEY (person_id) REFERENCES person(id)
+);
+
 -- Favorite movies table
 CREATE TABLE favorite_movies (
 	user_id INT,
@@ -80,6 +80,11 @@ CREATE TABLE favorite_movies (
 
 -- Genres table
 CREATE TABLE genres (
-	id PRIMARY KEY
-	name TEXT,
+	id SERIAL PRIMARY KEY,
+	name TEXT
+);
+
+CREATE TABLE country (
+	id SERIAL PRIMARY KEY,
+	name TEXT
 )
