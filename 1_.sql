@@ -1,19 +1,18 @@
 SELECT
-    p.id AS ID,
-    p.first_name AS "First name",
-    p.last_name AS "Last name",
+    actor.id AS "ID",
+    actor.first_name AS "First name",
+    actor.last_name AS "Last name",
     COALESCE(SUM(m.budget), 0) AS "Total movies budget"
 FROM
-    person p
-JOIN
-    character c ON p.id = c.person_id
-JOIN
-    movie m ON EXISTS (
-        SELECT 1
-        FROM jsonb_array_elements(m.characters) AS character
-        WHERE (character->>'id')::INT = c.id
-    )
+    movie m,
+    JSONB_ARRAY_ELEMENTS(m.actors) AS actor_data,
+    LATERAL (
+        SELECT
+            actor_data->>'id' AS id,
+            actor_data->>'first_name' AS first_name,
+            actor_data->>'last_name' AS last_name
+    ) AS actor
 GROUP BY
-    p.id, p.first_name, p.last_name
+    actor.id, actor.first_name, actor.last_name
 ORDER BY
-    p.id;
+    actor.id;
