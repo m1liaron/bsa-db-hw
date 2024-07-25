@@ -1,16 +1,17 @@
+SELECT
     m.id AS ID,
     m.title AS Title,
     m.release_date AS "Release date",
     m.duration AS Duration,
     m.description AS Description,
-	json_build_object(
+    json_build_object(
         'id', f.id,
         'file_name', f.file_name,
         'mime_type', f.mime_type,
         'file_key', f.file_key,
         'url', f.url
     ) AS Poster,
-	json_build_object(
+    json_build_object(
         'id', p.id,
         'first_name', p.first_name,
         'last_name', p.last_name,
@@ -22,30 +23,38 @@
             'url', pf.url
         )
     ) AS Director,
-	json_agg(
-        json_build_object(
-            'id', a.id,
-            'first_name', a.first_name,
-            'last_name', a.last_name,
-            'photo', json_build_object(
-                'id', ap.id,
-                'file_name', ap.file_name,
-                'mime_type', ap.mime_type,
-                'file_key', ap.file_key,
-                'url', ap.url
+    (
+        SELECT jsonb_agg(
+            DISTINCT jsonb_build_object(
+                'id', a.id,
+                'first_name', a.first_name,
+                'last_name', a.last_name,
+                'photo', jsonb_build_object(
+                    'id', ap.id,
+                    'file_name', ap.file_name,
+                    'mime_type', ap.mime_type,
+                    'file_key', ap.file_key,
+                    'url', ap.url
+                )
             )
         )
+        FROM
+            character c
+        LEFT JOIN
+            person a ON c.person_id = a.id
+        LEFT JOIN
+            person_photos ap_p ON a.id = ap_p.person_id
+        LEFT JOIN
+            file ap ON ap_p.file_id = ap.id
+        WHERE
+            c.movie_id = m.id
     ) AS Actors,
-	json_agg(
-		json_build_object(
-			'id', g.id,
-			'name', g.name
-		)
-	) AS Genres
-    -- m.poster AS Poster,
-    -- m.director AS Director,
-    -- m.actors AS Actors,
-    -- m.genres AS Genres
+    jsonb_agg(
+        DISTINCT jsonb_build_object(
+            'id', g.id,
+            'name', g.name
+        )
+    ) AS Genres
 FROM
     movie m
 JOIN
@@ -57,17 +66,9 @@ LEFT JOIN
 LEFT JOIN
     file pf ON pp.file_id = pf.id
 LEFT JOIN
-    character c ON m.id = c.movie_id
+    movie_genre mg ON mg.movie_id = m.id
 LEFT JOIN
-    person a ON c.person_id = a.id
-LEFT JOIN
-    person_photos ap_p ON a.id = ap_p.person_id
-LEFT JOIN
-    file ap ON ap_p.file_id = ap.id
-LEFT JOIN
-	movie_genre mg ON mg.movie_id = m.id
-LEFT JOIN
-	genre g ON mg.genre_id = g.id
+    genre g ON mg.genre_id = g.id
 WHERE
     m.id = 1
 GROUP BY

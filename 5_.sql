@@ -30,6 +30,6 @@ WHERE
     m.country_id = 1
     AND m.release_date >= '2022-01-01'
     AND m.duration > interval '2 hours 15 minutes'
-    -- AND g.name IN ('Action', 'Drama')
+    AND g.name IN ('Action', 'Drama')
 GROUP BY
-    -- m.id, f.id, p.id;
+    m.id, f.id, p.id;

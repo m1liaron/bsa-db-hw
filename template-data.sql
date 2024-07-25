@@ -49,3 +49,8 @@ INSERT INTO character (name, description, role, person_id, movie_id) VALUES
 INSERT INTO person_photos (person_id, file_id) VALUES
 (1, 3), -- Leonardo DiCaprio's additional photo
 (2, 4); -- Kate Winslet's additional photo
+
+INSERT INTO favorite_movies(user_id, movie_id)
+VALUES 
+	(1, 1),
+	(2, 2);
