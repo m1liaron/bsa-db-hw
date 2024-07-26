@@ -25,7 +25,9 @@ CREATE TABLE "user" (
 -- Country table to store country information
 CREATE TABLE country (
 	id SERIAL PRIMARY KEY,
-	name VARCHAR(50) NOT NULL
+	name VARCHAR(50) NOT NULL,
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Person table to store information about people (actors, directors, etc.)
@@ -45,7 +47,9 @@ CREATE TABLE person (
 -- Genre table to store genre information
 CREATE TABLE genre (
 	id SERIAL PRIMARY KEY,
-	name VARCHAR(50) UNIQUE NOT NULL
+	name VARCHAR(50) UNIQUE NOT NULL,
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Movie table to store information about movies
@@ -67,7 +71,9 @@ CREATE TABLE movie (
 CREATE TABLE movie_genre (
 	movie_id INT REFERENCES movie(id),
 	genre_id INT REFERENCES genre(id),
-	PRIMARY KEY (movie_id, genre_id)
+	PRIMARY KEY (movie_id, genre_id),
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Character table to store information about characters in movies
