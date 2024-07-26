@@ -1,12 +1,10 @@
-SELECT
-    u.id AS ID,
-    u.username AS "Username",
-    ARRAY_AGG(f.movie_id) AS "Favorite movie IDs"
-FROM
-    "user" u
-LEFT JOIN
-    favorite_movies f ON u.id = f.user_id
+SELECT 
+	u.id as ID,
+	u.username as "Username",
+	ARRAY_AGG(fm.movie_id) AS "Favorite movie IDS"
+FROM 
+	"user" u
+JOIN 
+	favorite_movies fm ON u.id = fm.user_id
 GROUP BY
-    u.id, u.username
-ORDER BY
-    u.id;
+	u.id, u.username

@@ -1,15 +1,12 @@
 SELECT
-    d.id AS "Director ID",
-    d.name AS "Director name",
-    AVG(m.budget) AS "Average budget"
-FROM
-    movie m
-    CROSS JOIN LATERAL (
-        SELECT
-            (director->>'id')::INT AS id,
-            CONCAT(director->>'first_name', ' ', director->>'last_name') AS name
-    ) d
+	p.id AS "Director ID",
+	CONCAT(p.first_name, ' ', p.last_name) AS "Director name",
+	AVG(m.budget) AS "Average budget"
+FROM 
+	person p
+JOIN 
+	movie m ON p.id = m.director_id
 GROUP BY
-    d.id, d.name
+	p.id
 ORDER BY
-    d.id;
+	"Director name";

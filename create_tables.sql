@@ -1,18 +1,4 @@
-
--- User table
-CREATE TABLE "user" (
-    id SERIAL PRIMARY KEY,
-    username VARCHAR(100),
-    first_name VARCHAR(50),
-    last_name VARCHAR(50),
-    email VARCHAR(100),
-    password VARCHAR(100),
-	avatar JSONB,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- File table
+-- File table to store file information
 CREATE TABLE file (
 	id SERIAL PRIMARY KEY,
     file_name VARCHAR(255) NOT NULL,
@@ -23,54 +9,85 @@ CREATE TABLE file (
 	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Movie table
+-- User table to store user profile and security information
+CREATE TABLE "user" (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(100) NOT NULL,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    password VARCHAR(100) NOT NULL,
+	avatar_id INT REFERENCES file(id),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Country table to store country information
+CREATE TABLE country (
+	id SERIAL PRIMARY KEY,
+	name VARCHAR(50) NOT NULL
+);
+
+-- Person table to store information about people (actors, directors, etc.)
+CREATE TABLE person (
+	id SERIAL PRIMARY KEY,
+	first_name VARCHAR(50) NOT NULL,
+	last_name VARCHAR(50) NOT NULL,
+	biography TEXT,
+	date_of_birth DATE,
+	gender VARCHAR(50) CHECK (gender IN ('male', 'female', 'man', 'woman')),
+	country_id INT REFERENCES country(id),
+	avatar_image_id INT REFERENCES file(id),
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Genre table to store genre information
+CREATE TABLE genre (
+	id SERIAL PRIMARY KEY,
+	name VARCHAR(50) UNIQUE NOT NULL
+);
+
+-- Movie table to store information about movies
 CREATE TABLE movie (
 	id SERIAL PRIMARY KEY,
 	title VARCHAR(100) NOT NULL,
 	description TEXT,
 	budget NUMERIC,
 	release_date DATE,
-	country JSONB,
 	duration INTERVAL,
-	poster JSONB,
-	director JSONB,
-	actors JSONB,
-	genres JSONB,
+	poster_id INT REFERENCES file(id),
+	director_id INT REFERENCES person(id),
+	country_id INT REFERENCES country(id),
 	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Person table
-CREATE TABLE person (
-	id SERIAL PRIMARY KEY,
-	first_name VARCHAR(50),
-	last_name VARCHAR(50),
-	biography TEXT,
-	date_of_birth DATE,
-	gender VARCHAR(50) CHECK (gender IN ('male', 'female', 'man', 'woman')),
-	country VARCHAR(50),
-	images JSONB[],
-	avatar_image TEXT,
-	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- Movie genres table to store many-to-many relationship between movies and genres
+CREATE TABLE movie_genre (
+	movie_id INT REFERENCES movie(id),
+	genre_id INT REFERENCES genre(id),
+	PRIMARY KEY (movie_id, genre_id),
+    FOREIGN KEY (movie_id) REFERENCES movie(id),
+    FOREIGN KEY (genre_id) REFERENCES genre(id)
 );
 
--- Character table
+-- Character table to store information about characters in movies
 CREATE TABLE character (
 	id SERIAL PRIMARY KEY,
 	name VARCHAR(50) NOT NULL,
 	description TEXT,
 	role VARCHAR(50) CHECK (role IN ('leading', 'supporting', 'background')),
 	person_id INT,
+	movie_id INT REFERENCES movie(id),
 	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	FOREIGN KEY (person_id) REFERENCES person(id)
 );
 
--- Favorite movies table
 CREATE TABLE favorite_movies (
-	user_id INT,
-	movie_id INT,
+	user_id INT NOT NULL,
+	movie_id INT NOT NULL,
 	PRIMARY KEY (user_id, movie_id),
 	FOREIGN KEY (user_id) REFERENCES "user"(id),
 	FOREIGN KEY (movie_id) REFERENCES movie(id),
@@ -78,13 +95,11 @@ CREATE TABLE favorite_movies (
 	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Genres table
-CREATE TABLE genres (
+-- Person photos table to store additional photos for people
+CREATE TABLE person_photos (
 	id SERIAL PRIMARY KEY,
-	name TEXT
+	person_id INT REFERENCES person(id),
+    file_id INT REFERENCES file(id),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
-CREATE TABLE country (
-	id SERIAL PRIMARY KEY,
-	name TEXT
-)
