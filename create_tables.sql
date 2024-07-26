@@ -67,7 +67,7 @@ CREATE TABLE movie (
 CREATE TABLE movie_genre (
 	movie_id INT REFERENCES movie(id),
 	genre_id INT REFERENCES genre(id),
-	PRIMARY KEY (movie_id, genre_id),
+	PRIMARY KEY (movie_id, genre_id)
 );
 
 -- Character table to store information about characters in movies
