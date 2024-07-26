@@ -35,7 +35,7 @@ CREATE TABLE person (
 	last_name VARCHAR(50) NOT NULL,
 	biography TEXT,
 	date_of_birth DATE,
-	gender VARCHAR(50) CHECK (gender IN ('male', 'female', 'man', 'woman')),
+	gender VARCHAR(50) CHECK (gender IN ('male', 'female', 'man', 'woman', 'other', 'non-binary', 'pes-patron')),
 	country_id INT REFERENCES country(id),
 	avatar_image_id INT REFERENCES file(id),
 	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -55,7 +55,7 @@ CREATE TABLE movie (
 	description TEXT,
 	budget NUMERIC,
 	release_date DATE,
-	duration INTERVAL,
+	duration TIME,
 	poster_id INT REFERENCES file(id),
 	director_id INT REFERENCES person(id),
 	country_id INT REFERENCES country(id),
@@ -68,8 +68,6 @@ CREATE TABLE movie_genre (
 	movie_id INT REFERENCES movie(id),
 	genre_id INT REFERENCES genre(id),
 	PRIMARY KEY (movie_id, genre_id),
-    FOREIGN KEY (movie_id) REFERENCES movie(id),
-    FOREIGN KEY (genre_id) REFERENCES genre(id)
 );
 
 -- Character table to store information about characters in movies
